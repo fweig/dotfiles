@@ -1,0 +1,32 @@
+#!/bin/bash
+
+set -e
+
+base_dir=$HOME
+
+link() {
+   src=$(pwd)/$1
+   tgt=$base_dir/$2
+   
+   mkdir -p $(dirname "$tgt")
+
+   if [ -L "$tgt" ]; then
+        echo "[WARNING] $tgt already symlinked"
+        return
+    fi
+
+    if [ -e "$tgt" ]; then
+        echo "[ERROR] $tgt exists but it's not a symlink. Please fix that manually"
+        exit 1
+    fi
+
+   ln -s $src $tgt 
+   echo "[OK] $src -> $tgt"
+}
+
+link bashrc .bashrc
+link gitconfig .gitconfig
+link gitconfig-github .gitconfig-github
+
+link vimrc .vimrc
+link vimrc .config/nvim/init.vim
