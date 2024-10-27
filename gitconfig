@@ -1,19 +1,19 @@
 [includeIf "hasconfig:remote.*.url:git@github.com:*/**"]
     path = ~/.gitconfig-github
 
-[init]
-    defaultBranch = main
-
 [github]
 	user = fweig
 
 [url "git@github.com:"]
 	pushInsteadOf = "https://github.com/"
 
-[push]
-    autoSetupRemote = true
-
 [alias]
     alias = "!git config -l | sed -n 's/^alias\\.//p'"
     l = log --pretty='%C(auto)%cs %h%d %an: %s'
     st = status -s -uall
+
+[init]
+    defaultBranch = main
+
+[push]
+    autoSetupRemote = true
