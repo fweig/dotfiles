@@ -14,5 +14,6 @@
     autoSetupRemote = true
 
 [alias]
+    alias = "!git config -l | sed -n 's/^alias\\.//p'"
     l = log --pretty='%C(auto)%cs %h%d %an: %s'
-    st = status -s -uno
+    st = status -s -uall
