@@ -14,4 +14,5 @@
     autoSetupRemote = true
 
 [alias]
+    l = log --pretty='%C(auto)%cs %h%d %an: %s'
     st = status -s -uno
