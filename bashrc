@@ -22,16 +22,6 @@ shopt -s histappend
 stty -ixon
 stty -ixoff
 
-alias rsync='rsync -a --progress'
-alias vi='nvim'
-alias tmux="tmux -u"
-alias ls="ls --color=auto"
-alias ll="ls -lAF"
-alias la="ls -A"
-alias l="ls -CF"
-
-alias nvim-qt="nvim-qt --no-ext-tabline"
-
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
@@ -43,18 +33,38 @@ if ! shopt -oq posix; then
   fi
 fi
 
+# Alias for unix
+alias rsync='rsync -a --progress'
+alias vi='nvim'
+alias tmux="tmux -u"
+alias ls="ls --color=auto"
+alias ll="ls -lAF"
+alias la="ls -A"
+alias l="ls -CF"
+
+alias nvim-qt="nvim-qt --no-ext-tabline"
+
+# Alias for useful shorthands
+alias bake="make -sCbuild"
+alias bt="gdb -batch -ex=r -ex=bt --args"
+
 op() {
     nohup xdg-open $@ & >/dev/null 2>&1
 }
 
+# Environment
 export TERM=xterm-256color
 export MAKEFLAGS="-j$(nproc)"
 export EDITOR='nvim'
 
 PATH+=":/sbin"
 
+# Shell prompt
 GIT_PS1_SHOWDIRTYSTATE='y'
 PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\[\e[91m\]$(__git_ps1)\[\033[00m\]\$ '
+
+# Look for local configurations
+[ -f ~/.bashrc.local ] && source ~/.bashrc.local
 
 function load_gcc_14 {
         _gcc14_dir=$HOME/.local/gcc-14.2.0
