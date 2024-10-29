@@ -1,5 +1,5 @@
 [includeIf "hasconfig:remote.*.url:git@github.com:*/**"]
-    path = ~/.gitconfig-github
+    path = ~/.gitconfig.github
 
 [github]
 	user = fweig
@@ -10,7 +10,7 @@
 [alias]
     alias = "!git config -l | sed -n 's/^alias\\.//p'"
     l = log --pretty='%C(auto)%cs %h%d %an: %s'
-    st = status -s -uall
+    st = status -s -unormal
 
 [init]
     defaultBranch = main
@@ -21,3 +21,6 @@
 [push]
     autoSetupRemote = true
     followTags = true
+
+[include]
+    path = ~/.gitconfig.local
