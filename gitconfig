@@ -10,6 +10,7 @@
 [alias]
     alias = "!git config -l | sed -n 's/^alias\\.//p'"
     l = log --pretty='%C(auto)%cs %h%d %an: %s'
+    sl = log --pretty='%C(auto)%cs %h%d %an: %s' -n 10
     st = status -s -unormal
 
 [init]
