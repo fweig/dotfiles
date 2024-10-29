@@ -26,7 +26,7 @@ link() {
 
 link bashrc .bashrc
 link gitconfig .gitconfig
-link gitconfig-github .gitconfig-github
+link gitconfig.github .gitconfig.github
 
 link vimrc .vimrc
 link vimrc .config/nvim/init.vim
