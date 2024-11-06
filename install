@@ -25,6 +25,8 @@ link() {
 }
 
 link bashrc .bashrc
+link zshrc .zshrc
+link profile .profile
 link gitconfig .gitconfig
 link gitconfig.github .gitconfig.github
 

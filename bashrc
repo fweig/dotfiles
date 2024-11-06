@@ -33,20 +33,6 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# Alias for unix
-alias rsync='rsync -a --progress'
-alias vi='nvim'
-alias tmux="tmux -u"
-alias ls="ls --color=auto"
-alias ll="ls -lAF"
-alias la="ls -A"
-alias l="ls -CF"
-
-alias nvim-qt="nvim-qt --no-ext-tabline"
-
-# Alias for useful shorthands
-alias bake="make -sCbuild"
-alias bt="gdb -batch -ex=r -ex=bt --args"
 
 op() {
     nohup xdg-open $@ & >/dev/null 2>&1
@@ -55,7 +41,6 @@ op() {
 # Environment
 export TERM=xterm-256color
 export MAKEFLAGS="-j$(nproc)"
-export EDITOR='nvim'
 
 PATH+=":/sbin"
 
