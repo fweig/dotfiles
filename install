@@ -5,9 +5,14 @@ set -e
 link() {
     src=$(pwd)/$1
 
+    if [ ! -e "$src" ]; then
+        echo "[ERROR] File '$src' doesn't exist. Not creating symlink."
+        exit 1
+    fi
+
     tgt_file=${2:-.$1}
     tgt="$HOME/$tgt_file"
-   
+
     mkdir -p $(dirname "$tgt")
 
     if [ -L "$tgt" ]; then
@@ -20,7 +25,7 @@ link() {
         exit 1
     fi
 
-    ln -s $src $tgt 
+    ln -s $src $tgt
     echo "[OK] $src -> $tgt"
 }
 
