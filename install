@@ -6,7 +6,13 @@ base_dir=$HOME
 
 link() {
     src=$(pwd)/$1
-    tgt=$base_dir/$2
+
+    tgt_file=$2
+    if [[ -z $tgt_file ]]; then
+        tgt_file=".$1"
+    fi
+
+    tgt=$base_dir/$tgt_file
    
     mkdir -p $(dirname "$tgt")
 
@@ -24,11 +30,11 @@ link() {
     echo "[OK] $src -> $tgt"
 }
 
-link bashrc .bashrc
-link zshrc .zshrc
-link profile .profile
-link gitconfig .gitconfig
-link gitconfig.github .gitconfig.github
+link bashrc
+link zshrc
+link profile
+link gitconfig
+link gitconfig.github
 
-link vimrc .vimrc
+link vimrc
 link vimrc .config/nvim/init.vim
