@@ -2,27 +2,21 @@
 
 set -e
 
-base_dir=$HOME
-
 link() {
     src=$(pwd)/$1
 
-    tgt_file=$2
-    if [[ -z $tgt_file ]]; then
-        tgt_file=".$1"
-    fi
-
-    tgt=$base_dir/$tgt_file
+    tgt_file=${2:-.$1}
+    tgt="$HOME/$tgt_file"
    
     mkdir -p $(dirname "$tgt")
 
     if [ -L "$tgt" ]; then
-         echo "[WARNING] $tgt already symlinked"
+         echo "[WARNING] '$tgt' already symlinked"
          return
     fi
 
     if [ -e "$tgt" ]; then
-        echo "[ERROR] $tgt exists but it's not a symlink. Please fix that manually"
+        echo "[ERROR] '$tgt' exists but it's not a symlink. Please fix that manually"
         exit 1
     fi
 
@@ -33,6 +27,7 @@ link() {
 link bashrc
 link zshrc
 link profile
+
 link gitconfig
 link gitconfig.github
 
