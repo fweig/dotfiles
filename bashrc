@@ -33,6 +33,9 @@ if ! shopt -oq posix; then
   fi
 fi
 
+git_ps1=/usr/share/git-core/contrib/completion/git-prompt.sh
+[[ -f $git_ps1 ]] && source $git_ps1
+
 
 op() {
     nohup xdg-open $@ & >/dev/null 2>&1
