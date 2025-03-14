@@ -3,6 +3,8 @@ filetype plugin indent on
 
 " --- Enable packages
 packadd! onedark
+packadd! fzf
+packadd! nerdtree
 
 " --- Colorscheme
 colorscheme onedark
@@ -57,11 +59,28 @@ let mapleader = "\<Space>"
 inoremap jk <esc>
 nnoremap <cr> :up<cr>
 
+" --- NerdTree setup
+
+" Start NERDTree when Vim is started without file arguments.
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
+
+nnoremap <leader>f :NERDTreeToggle<CR>
+
+" --- command shortcuts
+nmap <C-p> :Files<cr>
+
 " --- highlight last inserted text
 nnoremap gV `[v`]
 
 " --- Show buffer list
 nnoremap <Leader><Leader> :ls<cr>:b 
+
+" --- Copy and paste shortcuts
+vnoremap <C-S-c> "+y
+inoremap <C-S-v> <C-r>+
+nnoremap <C-S-v> "+p
+cnoremap <C-S-v> <C-r>+
 
 " --- quickfix
 nnoremap <Leader>c :cc<cr>

@@ -1,3 +1,9 @@
 [submodule "pack/colors/opt/onedark"]
 	path = pack/colors/opt/onedark
 	url = https://github.com/joshdick/onedark.vim.git
+[submodule "pack/others/opt/fzf"]
+	path = pack/others/opt/fzf
+	url = https://github.com/junegunn/fzf.vim.git
+[submodule "pack/others/opt/nerdtree"]
+	path = pack/others/opt/nerdtree
+	url = https://github.com/preservim/nerdtree.git
