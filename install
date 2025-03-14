@@ -35,6 +35,9 @@ link profile
 
 link gitconfig
 link gitconfig.github
+link gitignore
 
 link vimrc
 link vimrc .config/nvim/init.vim
+
+link pack .vim/pack
