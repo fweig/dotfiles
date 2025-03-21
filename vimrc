@@ -12,6 +12,7 @@ colorscheme onedark
 " --- Modify defaults
 set background=dark
 set lazyredraw                    " Dont redraw screen during macros
+set number                        " Display line numbers
 set tabstop=4                     " Number of spaces for a tab in a file
 set shiftwidth=4                  " Number of spaces per indent step
 set softtabstop=4                 " Number of spaces when inserting <Tab>
@@ -66,6 +67,30 @@ autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
 
 nnoremap <leader>f :NERDTreeToggle<CR>
+" If another buffer tries to replace NERDTree, put it in the other window, and
+" bring back NERDTree.
+ autocmd BufEnter * if winnr() == winnr('h') && bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 | let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
+
+" Automatically make NERDTree window unlisted
+autocmd FileType nerdtree setlocal bufhidden=wipe nobuflisted
+
+" Skip non-normal buffers when cycling
+function! NextNormalWindow()
+  let i = 0
+  let startWin = winnr()
+  while i < winnr('$')
+    wincmd w
+    if &buftype == '' && &filetype != 'nerdtree'
+      break
+    endif
+    let i += 1
+    if i >= winnr('$') || winnr() == startWin
+      break
+    endif
+  endwhile
+endfunction
+
+nnoremap <C-W><C-W> :call NextNormalWindow()<CR>
 
 " --- command shortcuts
 nmap <C-p> :Files<cr>

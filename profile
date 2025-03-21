@@ -1,5 +1,5 @@
 # Variables
-export EDITOR='nvim'
+export EDITOR='vim'
 
 # Alias for unix
 alias rsync='rsync -a --progress'
@@ -9,8 +9,6 @@ alias ls="ls --color=auto"
 alias ll="ls -lAF"
 alias la="ls -A"
 alias l="ls -CF"
-
-alias nvim-qt="nvim-qt --no-ext-tabline"
 
 # Alias for useful shorthands
 alias bake="make -sCbuild"

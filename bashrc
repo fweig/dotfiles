@@ -54,6 +54,9 @@ PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\[\e[91m\]$(_
 # Look for local configurations
 [ -f ~/.bashrc.local ] && source ~/.bashrc.local
 
+# Look for common configurations
+[ -f ~/.profile ] && source ~/.profile
+
 function load_gcc_14 {
         _gcc14_dir=$HOME/.local/gcc-14.2.0
         export CC=$_gcc14_dir/bin/gcc
