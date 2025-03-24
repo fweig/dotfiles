@@ -39,6 +39,7 @@ set cinoptions+=g0                " Dont indent public/private/protected-declara
 set wildignore=*.o,*.a
 set belloff=all                   " Disable all bell sounds
 set guioptions=c                  " Use console dialogs instead of popups
+set exrc                          " Load .vimrc in current folder
 
 set statusline=%f\ %r%=Ln\ %l,\ Col\ %c " Display filename and position in statusline
 
