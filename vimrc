@@ -27,7 +27,7 @@ set formatoptions=qrn1
 set splitbelow                    " Open new vert splits below
 set splitright                    " Open new horiz splits right
 set laststatus=2                  " Always display status line
-set incsearch                     " Jump to search result   
+set incsearch                     " Jump to search result
 set nohlsearch                    " Dont highlight search result
 set mouse=                        " no mouse
 set autowrite                     " save when using make
@@ -36,7 +36,7 @@ set wildmenu
 set wildmode=longest:full         " show completion matches and complete longest substring
 set cinoptions+=:0                " Dont indent case labels in switch-statements.
 set cinoptions+=g0                " Dont indent public/private/protected-declarations.
-set wildignore=*.o,*.a 
+set wildignore=*.o,*.a
 set belloff=all                   " Disable all bell sounds
 set guioptions=c                  " Use console dialogs instead of popups
 
@@ -99,7 +99,7 @@ nmap <C-p> :Files<cr>
 nnoremap gV `[v`]
 
 " --- Show buffer list
-nnoremap <Leader><Leader> :ls<cr>:b 
+nnoremap <Leader><Leader> :ls<cr>:b
 
 " --- Copy and paste shortcuts
 vnoremap <C-S-c> "+y
@@ -115,3 +115,11 @@ nnoremap <Leader>p :cp<cr>
 " --- Edit / reload vimrc
 nnoremap <Leader>ev :tabnew $MYVIMRC<cr>
 nnoremap <Leader>sv :source $MYVIMRC<cr>
+
+" --- Trim trailing whitespace
+autocmd BufWritePre * let [v,c,l]=[winsaveview(),&cuc,&cul]
+                  \ | set cuc cul
+                  \ | keeppatterns %s/\s\+$//e
+                  \ | let [&cuc,&cul]=[c,l]
+                  \ | call winrestview(v)
+                  \ | unlet v l c
