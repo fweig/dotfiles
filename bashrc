@@ -33,6 +33,10 @@ if ! shopt -oq posix; then
   fi
 fi
 
+# Autoload ssh keys
+eval $(ssh-agent) >/dev/null 2>&1
+ssh-add ~/.ssh/id >/dev/null 2>&1
+
 git_ps1=/usr/share/git-core/contrib/completion/git-prompt.sh
 [[ -f $git_ps1 ]] && source $git_ps1
 
@@ -57,9 +61,3 @@ PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\[\e[91m\]$(_
 # Look for common configurations
 [ -f ~/.profile ] && source ~/.profile
 
-function load_gcc_14 {
-        _gcc14_dir=$HOME/.local/gcc-14.2.0
-        export CC=$_gcc14_dir/bin/gcc
-        export CXX=$_gcc14_dir/bin/g++
-        export LDFLAGS="${LDFLAGS} -L $_gcc14_dir/lib64 -Wl,-rpath -Wl,$_gcc14_dir/lib64"
-}
