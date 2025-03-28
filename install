@@ -40,4 +40,3 @@ link gitignore
 link vimrc
 link vimrc .config/nvim/init.vim
 
-link pack .vim/pack

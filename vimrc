@@ -5,6 +5,7 @@ filetype plugin indent on
 packadd! onedark
 packadd! fzf
 packadd! nerdtree
+packadd! fugitive
 
 " --- Colorscheme
 colorscheme onedark
@@ -112,6 +113,9 @@ cnoremap <C-S-v> <C-r>+
 nnoremap <Leader>c :cc<cr>
 nnoremap <Leader>n :cn<cr>
 nnoremap <Leader>p :cp<cr>
+
+" --- Run compiler
+nnoremap <F5> :make<cr>
 
 " --- Edit / reload vimrc
 nnoremap <Leader>ev :tabnew $MYVIMRC<cr>
