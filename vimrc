@@ -92,7 +92,7 @@ function! NextNormalWindow()
   endwhile
 endfunction
 
-nnoremap <C-W><C-W> :call NextNormalWindow()<CR>
+" nnoremap <C-W><C-W> :call NextNormalWindow()<CR>
 
 " --- command shortcuts
 nmap <C-p> :Files<cr>
