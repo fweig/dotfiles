@@ -31,7 +31,7 @@ set laststatus=2                  " Always display status line
 set incsearch                     " Jump to search result
 set nohlsearch                    " Dont highlight search result
 set mouse=                        " no mouse
-set autowrite                     " save when using make
+set autowriteall                  " autosave when leaving the buffer (e.g. call make or use fzf)
 set timeoutlen=1000 ttimeoutlen=0 " Wait one second after a mapped key
 set wildmenu
 set wildmode=longest:full         " show completion matches and complete longest substring
