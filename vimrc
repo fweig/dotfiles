@@ -4,8 +4,9 @@ filetype plugin indent on
 " --- Enable packages
 packadd! onedark
 packadd! fzf
-packadd! nerdtree
+" packadd! nerdtree
 packadd! fugitive
+packadd! ycm
 
 " --- Colorscheme
 colorscheme onedark
@@ -30,7 +31,7 @@ set splitright                    " Open new horiz splits right
 set laststatus=2                  " Always display status line
 set incsearch                     " Jump to search result
 set nohlsearch                    " Dont highlight search result
-set mouse=                        " no mouse
+set mouse=a                       " Enable mouse support
 set autowriteall                  " autosave when leaving the buffer (e.g. call make or use fzf)
 set timeoutlen=1000 ttimeoutlen=0 " Wait one second after a mapped key
 set wildmenu
@@ -120,6 +121,13 @@ nnoremap <F5> :make<cr>
 " --- Edit / reload vimrc
 nnoremap <Leader>ev :tabnew $MYVIMRC<cr>
 nnoremap <Leader>sv :source $MYVIMRC<cr>
+
+" --- YouCompleteMe
+let g:ycm_goto_buffer_command = 'vertical-split'
+
+nnoremap gd :YcmCompleter GoToDefinition<cr>
+nnoremap gD :YcmCompleter GoToDeclaration<cr>
+
 
 " --- Trim trailing whitespace
 autocmd BufWritePre * let [v,c,l]=[winsaveview(),&cuc,&cul]
