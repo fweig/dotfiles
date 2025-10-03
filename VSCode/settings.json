@@ -1,0 +1,26 @@
+{
+    "C_Cpp.intelliSenseEngine": "disabled",
+    "editor.fontFamily": "'Berkeley Mono', 'Droid Sans Mono', 'monospace', monospace",
+    "editor.minimap.enabled": false,
+    "files.trimTrailingWhitespace": true,
+    "files.trimFinalNewlines": true,
+    "extensions.ignoreRecommendations": true,
+    "update.mode": "none",
+    "update.showReleaseNotes": false,
+    "C_Cpp.refactoring.includeHeader": "never",
+    "clangd.path": "/home/felix/.config/Code/User/globalStorage/llvm-vs-code-extensions.vscode-clangd/install/20.1.8/clangd_20.1.8/bin/clangd",
+    "files.insertFinalNewline": true,
+    "telemetry.editStats.enabled": false,
+    "telemetry.feedback.enabled": false,
+    "telemetry.telemetryLevel": "off",
+    "window.titleBarStyle": "native",
+    "window.closeWhenEmpty": true,
+    "window.enableMenuBarMnemonics": false,
+    "window.menuBarVisibility": "hidden",
+    "workbench.activityBar.location": "top",
+    "window.customTitleBarVisibility": "never",
+    "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
+    "clangd.arguments": [
+        "--header-insertion=never"
+    ]
+}
