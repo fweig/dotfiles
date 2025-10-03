@@ -6,6 +6,7 @@ packadd! onedark
 packadd! fzf
 " packadd! nerdtree
 packadd! fugitive
+packadd! supertab
 packadd! ycm
 
 " --- Colorscheme
