@@ -8,7 +8,7 @@
     "update.mode": "none",
     "update.showReleaseNotes": false,
     "C_Cpp.refactoring.includeHeader": "never",
-    "clangd.path": "/home/felix/.config/Code/User/globalStorage/llvm-vs-code-extensions.vscode-clangd/install/20.1.8/clangd_20.1.8/bin/clangd",
+    "clangd.path": "/usr/bin/clangd",
     "files.insertFinalNewline": true,
     "telemetry.editStats.enabled": false,
     "telemetry.feedback.enabled": false,
@@ -22,5 +22,11 @@
     "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
     "clangd.arguments": [
         "--header-insertion=never"
-    ]
+    ],
+    "chat.agent.enabled": false,
+    "workbench.secondarySideBar.defaultVisibility": "hidden",
+    "clangd.inactiveRegions.useBackgroundHighlight": true,
+    "debug.closeReadonlyTabsOnEnd": true,
+    "workbench.editor.tabSizing": "shrink",
+    "git.openRepositoryInParentFolders": "never"
 }
