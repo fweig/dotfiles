@@ -45,7 +45,7 @@ PATH+=":/sbin"
 
 # Shell prompt
 GIT_PS1_SHOWDIRTYSTATE='y'
-PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\[\e[91m\]$(__git_ps1)\[\033[00m\]\$ '
+PS1='\[\033[32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\[\e[91m\]$(__git_ps1)\[\033[00m\]\$ '
 
 # Look for local configurations
 [ -f ~/.bashrc.local ] && source ~/.bashrc.local

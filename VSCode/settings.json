@@ -13,7 +13,6 @@
     "telemetry.editStats.enabled": false,
     "telemetry.feedback.enabled": false,
     "telemetry.telemetryLevel": "off",
-    "window.titleBarStyle": "native",
     "window.closeWhenEmpty": true,
     "window.enableMenuBarMnemonics": false,
     "window.menuBarVisibility": "hidden",
@@ -28,5 +27,6 @@
     "clangd.inactiveRegions.useBackgroundHighlight": true,
     "debug.closeReadonlyTabsOnEnd": true,
     "workbench.editor.tabSizing": "shrink",
-    "git.openRepositoryInParentFolders": "never"
+    "git.openRepositoryInParentFolders": "never",
+    "window.autoDetectColorScheme": true
 }
