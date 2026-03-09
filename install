@@ -33,6 +33,7 @@ link bashrc
 link zshrc
 link profile
 link tmux.conf
+link justfile
 
 link gitconfig
 link gitconfig.github
