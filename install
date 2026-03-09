@@ -32,6 +32,7 @@ link() {
 link bashrc
 link zshrc
 link profile
+link tmux.conf
 
 link gitconfig
 link gitconfig.github
