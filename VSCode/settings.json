@@ -28,5 +28,7 @@
     "debug.closeReadonlyTabsOnEnd": true,
     "workbench.editor.tabSizing": "shrink",
     "git.openRepositoryInParentFolders": "never",
-    "window.autoDetectColorScheme": true
+    "window.autoDetectColorScheme": true,
+    "claudeCode.preferredLocation": "panel",
+    "claudeCode.selectedModel": "opus"
 }
