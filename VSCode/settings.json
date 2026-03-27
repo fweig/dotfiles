@@ -31,4 +31,5 @@
     "window.autoDetectColorScheme": true,
     "claudeCode.preferredLocation": "panel",
     "claudeCode.selectedModel": "opus"
+    "security.workspace.trust.untrustedFiles": "open"
 }
