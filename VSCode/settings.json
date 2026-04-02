@@ -30,6 +30,7 @@
     "git.openRepositoryInParentFolders": "never",
     "window.autoDetectColorScheme": true,
     "claudeCode.preferredLocation": "panel",
-    "claudeCode.selectedModel": "opus"
-    "security.workspace.trust.untrustedFiles": "open"
+    "claudeCode.selectedModel": "opus",
+    "security.workspace.trust.untrustedFiles": "open",
+    "window.titleBarStyle": "native"
 }
