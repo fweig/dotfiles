@@ -32,7 +32,7 @@ update-firmware:
 # Check for available dnf updates
 check-dnf:
     @echo "📦 Available dnf updates:"
-    dnf check-update --refresh || true
+    sudo dnf check-update --refresh || true
 
 # Check for available Flatpak updates
 check-flatpak:
