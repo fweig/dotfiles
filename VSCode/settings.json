@@ -30,7 +30,13 @@
     "git.openRepositoryInParentFolders": "never",
     "window.autoDetectColorScheme": true,
     "claudeCode.preferredLocation": "panel",
-    "claudeCode.selectedModel": "opus",
+    "claudeCode.selectedModel": "default",
     "security.workspace.trust.untrustedFiles": "open",
-    "window.titleBarStyle": "native"
+    "window.titleBarStyle": "native",
+    "chatgpt.composerEnterBehavior": "cmdIfMultiline",
+    "workbench.editorAssociations": {
+        "*.pdf": "latex-workshop-pdf-hook"
+    },
+    "chatgpt.commentCodeLensEnabled": false,
+    "workbench.remoteIndicator.showExtensionRecommendations": false
 }
