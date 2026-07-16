@@ -38,5 +38,6 @@
         "*.pdf": "latex-workshop-pdf-hook"
     },
     "chatgpt.commentCodeLensEnabled": false,
-    "workbench.remoteIndicator.showExtensionRecommendations": false
+    "workbench.remoteIndicator.showExtensionRecommendations": false,
+    "extensions.autoUpdate": "off"
 }

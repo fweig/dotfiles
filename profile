@@ -13,3 +13,5 @@ alias l="ls -CF"
 # Alias for useful shorthands
 alias bake="make -sCbuild"
 alias bt="gdb -batch -ex=r -ex=bt --args"
+
+alias codex="codex --sandbox read-only --ask-for-approval never"

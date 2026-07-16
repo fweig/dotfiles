@@ -42,4 +42,6 @@ link gitignore
 link vimrc
 link vimrc .config/nvim/init.vim
 
+link codex/AGENTS.md
+
 link VSCode/settings.json .config/Code/User/settings.json
