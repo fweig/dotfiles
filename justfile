@@ -73,12 +73,12 @@ update-proton-ge:
     mkdir /tmp/proton-ge-custom
     cd /tmp/proton-ge-custom
     tarball_url=$(curl -s https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases/latest \
-        | grep browser_download_url | cut -d\" -f4 | grep .tar.gz)
+        | grep browser_download_url | cut -d\" -f4 | grep x86_64.tar.gz)
     tarball_name=$(basename "$tarball_url")
     echo "⬇️  Downloading $tarball_name..."
     curl -# -L "$tarball_url" -o "$tarball_name" --no-progress-meter
     checksum_url=$(curl -s https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases/latest \
-        | grep browser_download_url | cut -d\" -f4 | grep .sha512sum)
+        | grep browser_download_url | cut -d\" -f4 | grep x86_64.sha512sum)
     checksum_name=$(basename "$checksum_url")
     echo "⬇️  Downloading checksum..."
     curl -# -L "$checksum_url" -o "$checksum_name" --no-progress-meter
