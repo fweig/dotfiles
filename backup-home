@@ -1,0 +1,295 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+readonly PROGRAM_NAME=${0##*/}
+readonly HOME_DIR=${HOME:?HOME is not set}
+readonly CLOUD_DIR=${CLOUD_DIR:-"$HOME_DIR/Cloud"}
+readonly BACKUP_DIR=${BACKUP_DIR:-"$CLOUD_DIR/Backups"}
+
+usage() {
+    cat <<EOF
+Usage:
+  $PROGRAM_NAME backup
+  $PROGRAM_NAME restore [--yes] ARCHIVE [DESTINATION]
+  $PROGRAM_NAME list ARCHIVE
+  $PROGRAM_NAME help
+
+Commands:
+  backup   Back up the home directory to $BACKUP_DIR
+  restore  Restore an archive (DESTINATION defaults to $HOME_DIR)
+  list     Show the files contained in an archive without restoring them
+
+Environment overrides:
+  CLOUD_DIR   Nextcloud directory (default: $CLOUD_DIR)
+  BACKUP_DIR  Archive directory (default: $BACKUP_DIR)
+EOF
+}
+
+die() {
+    printf 'Error: %s\n' "$*" >&2
+    exit 1
+}
+
+progress_stream() {
+    local estimated_bytes=$1 label=$2
+
+    # Measure the uncompressed tar stream. This keeps the progress estimate
+    # meaningful even though gzip's compression ratio is not known in advance.
+    python3 -c '
+import sys
+import time
+
+total = max(int(sys.argv[1]), 1)
+label = sys.argv[2]
+started = updated = time.monotonic()
+processed = 0
+
+def human_size(value):
+    units = ("B", "KiB", "MiB", "GiB", "TiB")
+    value = float(value)
+    for unit in units:
+        if value < 1024 or unit == units[-1]:
+            return f"{value:.1f} {unit}"
+        value /= 1024
+
+def display(final=False):
+    elapsed = max(time.monotonic() - started, 0.001)
+    rate = processed / elapsed
+    if final:
+        percent = 100.0
+        eta = "done"
+    else:
+        # The total includes an estimate for tar headers. Keep 100% for EOF.
+        percent = min(processed * 100 / total, 99.9)
+        remaining = max(total - processed, 0)
+        eta = f"ETA {remaining / rate:.0f}s" if rate else "ETA --"
+    message = (
+        f"\r{label}: {percent:5.1f}%  {human_size(processed)}  "
+        f"{human_size(rate)}/s  {eta}"
+    )
+    print(message, end="\n" if final else "", file=sys.stderr, flush=True)
+
+while chunk := sys.stdin.buffer.read(1024 * 1024):
+    sys.stdout.buffer.write(chunk)
+    processed += len(chunk)
+    now = time.monotonic()
+    if now - updated >= 0.5:
+        display()
+        updated = now
+
+sys.stdout.buffer.flush()
+display(final=True)
+' "$estimated_bytes" "$label"
+}
+
+# Add both the directory and everything below it. Patterns deliberately start
+# with */ so that they match at any depth, including entries such as ./.cache.
+exclude_directory_name() {
+    local name=$1
+    TAR_EXCLUDES+=("--exclude=*/$name" "--exclude=*/$name/**")
+}
+
+build_exclusions() {
+    TAR_EXCLUDES=(
+        "--exclude=./Cloud"
+        "--exclude=./Cloud/**"
+        "--exclude=./WorkCloud"
+        "--exclude=./WorkCloud/**"
+        "--exclude=./.config"
+        "--exclude=./.config/**"
+    )
+
+    local directory
+    for directory in \
+        .cache cache Cache Caches cache2 .ccache \
+        .npm .yarn .pnpm-store \
+        __pycache__ .pytest_cache .mypy_cache .ruff_cache .tox .nox \
+        .venv venv \
+        node_modules bower_components \
+        build Build dist out target CMakeFiles 'cmake-build-*' DerivedData \
+        .gradle .next .nuxt .svelte-kit .parcel-cache .turbo \
+        htmlcov coverage \
+        .Trash Trash; do
+        exclude_directory_name "$directory"
+    done
+
+    # Large, reproducible package caches whose parent directories may also
+    # contain configuration worth preserving.
+    TAR_EXCLUDES+=(
+        "--exclude=*/.m2/repository"
+        "--exclude=*/.m2/repository/**"
+        "--exclude=*/.cargo/registry"
+        "--exclude=*/.cargo/registry/**"
+        "--exclude=*/.cargo/git"
+        "--exclude=*/.cargo/git/**"
+        "--exclude=*/.local/share/Trash"
+        "--exclude=*/.local/share/Trash/**"
+    )
+}
+
+exclude_path_if_inside_home() {
+    local path=$1 relative
+    if [[ $path == "$HOME_DIR/"* ]]; then
+        relative=${path#"$HOME_DIR/"}
+        TAR_EXCLUDES+=("--exclude=./$relative" "--exclude=./$relative/**")
+    fi
+}
+
+estimate_archive_size() {
+    local content_bytes entry_count
+
+    # Tar adds at least one 512-byte header per entry plus padding. An extra
+    # 1 KiB per inode gives a useful estimate without reading every file twice.
+    content_bytes=$(du \
+        --apparent-size \
+        --bytes \
+        --summarize \
+        "${TAR_EXCLUDES[@]}" \
+        . | awk '{print $1}')
+    entry_count=$(du \
+        --inodes \
+        --summarize \
+        "${TAR_EXCLUDES[@]}" \
+        . | awk '{print $1}')
+    printf '%s\n' "$((content_bytes + entry_count * 1024 + 10240))"
+}
+
+create_backup() {
+    [[ -d $HOME_DIR ]] || die "Home directory does not exist: $HOME_DIR"
+    [[ -d $CLOUD_DIR ]] || die "Nextcloud directory does not exist: $CLOUD_DIR"
+    [[ $CLOUD_DIR != "$HOME_DIR" ]] || die "CLOUD_DIR must not be the home directory"
+    mkdir -p -- "$BACKUP_DIR"
+
+    local host timestamp archive archive_base partial counter estimated_bytes
+    host=$(hostname -s | tr -cd '[:alnum:]._-')
+    [[ -n $host ]] || host=unknown-host
+    timestamp=$(date '+%Y-%m-%d_%H-%M-%S')
+    archive_base="$BACKUP_DIR/home-${host}-${timestamp}"
+    archive="${archive_base}.tar.gz"
+    counter=1
+    while [[ -e $archive ]]; do
+        archive="${archive_base}-${counter}.tar.gz"
+        ((counter += 1))
+    done
+    partial="$BACKUP_DIR/.${archive##*/}.partial.$$"
+
+    build_exclusions
+    # Also handle environment overrides without accidentally archiving the
+    # output archive itself when either path is located below HOME.
+    exclude_path_if_inside_home "$CLOUD_DIR"
+    exclude_path_if_inside_home "$BACKUP_DIR"
+    trap 'rm -f -- "$partial"' EXIT HUP INT TERM
+
+    printf 'Estimating backup size...\n'
+    estimated_bytes=$(cd -- "$HOME_DIR" && estimate_archive_size)
+    printf 'Creating %s\n' "$archive"
+    tar \
+        --create \
+        --file - \
+        --directory "$HOME_DIR" \
+        --numeric-owner \
+        --acls \
+        --xattrs \
+        --exclude-caches \
+        "${TAR_EXCLUDES[@]}" \
+        . \
+        | progress_stream "$estimated_bytes" 'Backing up' \
+        | gzip >"$partial"
+
+    mv -- "$partial" "$archive"
+    trap - EXIT HUP INT TERM
+    printf 'Backup complete: %s\n' "$archive"
+}
+
+check_archive() {
+    local archive=$1 listing
+    [[ -f $archive ]] || die "Archive does not exist: $archive"
+    [[ -r $archive ]] || die "Archive is not readable: $archive"
+
+    listing=$(mktemp)
+    trap 'rm -f -- "$listing"' RETURN
+    tar --list --gzip --file "$archive" >"$listing" || die "Invalid or damaged tar.gz archive: $archive"
+
+    # Refuse archive member names that could escape the restore destination.
+    if awk '$0 ~ /^\// || $0 ~ /(^|\/)\.\.($|\/)/ { found=1 } END { exit !found }' "$listing"; then
+        die "Archive contains an unsafe absolute or parent-relative path"
+    fi
+    rm -f -- "$listing"
+    trap - RETURN
+}
+
+list_archive() {
+    local archive=${1:-}
+    [[ -n $archive ]] || die "The list command requires an archive path"
+    check_archive "$archive"
+    tar --list --verbose --gzip --file "$archive"
+}
+
+restore_backup() {
+    local assume_yes=false
+    if [[ ${1:-} == --yes ]]; then
+        assume_yes=true
+        shift
+    fi
+
+    local archive=${1:-} archive_bytes
+    local destination=${2:-$HOME_DIR}
+    [[ -n $archive ]] || die "The restore command requires an archive path"
+    [[ $# -le 2 ]] || die "Too many arguments for restore"
+
+    check_archive "$archive"
+    mkdir -p -- "$destination"
+    destination=$(cd -- "$destination" && pwd -P)
+
+    if [[ $assume_yes != true ]]; then
+        printf 'Restore %s into %s? Existing files may be overwritten. [y/N] ' \
+            "$archive" "$destination"
+        if ! read -r reply; then
+            printf '\nRestore cancelled because no confirmation was received.\n' >&2
+            return 1
+        fi
+        [[ $reply == y || $reply == Y || $reply == yes || $reply == YES ]] || {
+            printf 'Restore cancelled.\n'
+            return 0
+        }
+    fi
+
+    archive_bytes=$(stat --format='%s' -- "$archive")
+    progress_stream "$archive_bytes" 'Restoring' <"$archive" \
+    | tar \
+        --extract \
+        --gzip \
+        --file - \
+        --directory "$destination" \
+        --acls \
+        --xattrs \
+        --delay-directory-restore
+    printf 'Restore complete: %s\n' "$destination"
+}
+
+main() {
+    case ${1:-help} in
+        backup)
+            [[ $# -eq 1 ]] || die "The backup command takes no arguments"
+            create_backup
+            ;;
+        restore)
+            shift
+            restore_backup "$@"
+            ;;
+        list)
+            shift
+            list_archive "$@"
+            ;;
+        help|-h|--help)
+            usage
+            ;;
+        *)
+            usage >&2
+            die "Unknown command: $1"
+            ;;
+    esac
+}
+
+main "$@"
